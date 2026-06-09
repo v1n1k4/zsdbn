@@ -59,10 +59,10 @@ bars.addEventListener("click", () => {
 
                     <script>
                         async function addMateria(){
-                            const buscaMaterias = await fetch("/materias/listar");
+                            const buscaMaterias = await fetch("https://lolooo-production.up.railway.app/materias/listar");
                             const materias = await buscaMaterias.json();
                             
-                            const buscaProfessores = await fetch("/professores/listar");
+                            const buscaProfessores = await fetch("https://lolooo-production.up.railway.app/professores/listar");
                             const professores = await buscaProfessores.json();
 
                             let aulas = document.getElementById("aulas");
