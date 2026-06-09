@@ -1,0 +1,260 @@
+<!doctype html>
+
+<html lang="pt-BR">
+
+<head>
+
+    <meta charset="UTF-8" />
+
+    <title>Cadastro de escolas</title>
+
+    <style>
+
+        body {
+            font-family: Arial, sans-serif;
+            background-color: #f4f6f8;
+            margin: 0;
+            padding: 30px;
+        }
+
+        .container {
+            max-width: 1100px;
+            margin: auto;
+            background: white;
+            padding: 25px;
+            border-radius: 10px;
+            box-shadow: 0 0 10px #ccc;
+        }
+
+        h1 {
+            text-align: center;
+            color: #2c3e50;
+        }
+
+        form {
+            display: grid;
+            grid-template-columns: repeat(2, 1fr);
+            gap: 15px;
+            margin-bottom: 30px;
+        }
+
+        input {
+            padding: 10px;
+            border: 1px solid #bbb;
+            border-radius: 5px;
+        }
+
+        button {
+            width: 180px;
+            padding: 12px;
+            background-color: #2a4d69;
+            color: white;
+            border: none;
+            border-radius: 5px;
+            cursor: pointer;
+            font-weight: bold;
+            grid-column: 1;
+            justify-self: start;
+        }
+
+        button:hover {
+            background-color: #1f3a50;
+        }
+
+        table {
+            width: 100%;
+            border-collapse: collapse;
+            font-size: 14px;
+        }
+
+        th {
+            background-color: #2a4d69;
+            color: white;
+            padding: 10px;
+        }
+
+        td {
+            padding: 8px;
+            border: 1px solid #ddd;
+            text-align: center;
+        }
+
+        tr:nth-child(even) {
+            background-color: #f2f2f2;
+        }
+
+        .editar {
+            color: #2980b9;
+            cursor: pointer;
+            font-weight: bold;
+        }
+
+        .excluir {
+            color: #c0392b;
+            cursor: pointer;
+            font-weight: bold;
+        }
+
+    </style>
+</head>
+
+<body>
+    <header>
+        <header>
+     
+    <div id="side-menu">
+    <div class="bars">
+        <div class="menu-bar"></div>
+        <div class="menu-bar"></div>
+        <div class="menu-bar"></div>
+    </div>
+
+    <a href="index.html" class="side-link">🏠 Início</a>
+    <a href="form_login.html?tipo=entrar" class="side-link">🔑 Login</a>
+    <a href="listar_sala.html" class="side-link">📚 Salas</a>
+    <a href="form_nova_sala.html" class="side-link">➕forma sala</a>
+    <a href="config_sala.html" class="side-link">⚙️config sala</a>
+    <a href="tabela_cadastros.html">tabela de profs</a>
+    <script>
+const bars = document.querySelector(".bars");
+const menu = document.querySelector("#side-menu");
+
+bars.addEventListener("click", () => {
+    menu.classList.toggle("open");
+});
+</script>
+    </header>
+
+    <div class="container">
+        <h1>Cadastro de Escola</h1>
+
+        <table>
+            <thead>
+                <tr>
+                    <th>ID</th>
+                    <th>Nome</th>
+                    <th>E-mail</th>
+                    <th>tipo</th>
+                   
+                </tr>
+            </thead>
+
+            <tbody id="tabelaCadastro"></tbody>
+        </table>
+    </div>
+
+    <script>
+
+        const api = "/form_cadastro-html";
+
+        async function listarClientes() {
+
+            const response = await fetch(api);
+
+            const clientes = await response.json();
+
+            const tabela = document.getElementById("tabelaClientes");
+
+            tabela.innerHTML = "";
+
+            clientes.forEach((cadastro) => {
+
+                tabela.innerHTML += `
+                    <tr>
+                        <td>${cadastro.id}</td>
+                        <td>${cadastro.nome}</td>
+                        <td>${cadastro.email}</td>
+                         <td>${cadastro.tipo}</td>
+                        
+                        <td>
+                            <span class="editar" onclick="editarCliente(${cadastro.id})">
+                                Editar
+                            </span>
+                        </td>
+                        <td>
+                            <span class="excluir" onclick="excluirCliente(${cadastro.id})">
+                                Excluir
+                            </span>
+                        </td>
+                    </tr>
+                `;
+            });
+        }
+
+        document.getElementById("formCliente").addEventListener("submit", async function (e) {
+
+            e.preventDefault();
+
+            const id = document.getElementById("id").value;
+
+            const cadastro = {
+                nome: document.getElementById("nome").value,
+                email: document.getElementById("email").value,
+       
+             
+            };
+
+            if (id === "") {
+
+                await fetch(api, {
+                    method: "POST",
+                    headers: {
+                        "Content-Type": "application/json",
+                    },
+                    body: JSON.stringify(cadastro),
+                });
+
+            } else {
+
+                await fetch(`${api}/${id}`, {
+                    method: "PUT",
+                    headers: {
+                        "Content-Type": "application/json",
+                    },
+                    body: JSON.stringify(cadastro),
+                });
+            }
+
+            limparFormulario();
+
+            listarClientes();
+        });
+
+        async function editarCliente(id) {
+
+            const response = await fetch(`${api}/${id}`);
+
+            const cadastro = await response.json();
+
+            document.getElementById("id").value = cadastro.id;
+            document.getElementById("nome").value = cadastro.nome;
+            document.getElementById("email").value = cadastro.email;
+        
+        }
+
+        async function excluirCliente(id) {
+
+            if (confirm("Deseja excluir este cadastro?")) {
+
+                await fetch(`${api}/${id}`, {
+                    method: "DELETE",
+                });
+
+                listarClientes();
+            }
+        }
+
+        function limparFormulario() {
+
+            document.getElementById("formCadastro").reset();
+
+            document.getElementById("id").value = "";
+        }
+
+        listarClientes();
+
+    </script>
+
+</body>
+
+</html>
