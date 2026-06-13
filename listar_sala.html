@@ -71,36 +71,17 @@ bars.addEventListener("click", () => {
 
                 salas.forEach((sala) => {
                     sect.innerHTML += `
-                    <a href="grade.html"><article class="caixa_sala vermelho">
-                        <p>${sala.nome_sala}</p>
-                    </article></a>
+                    <a href="grade.htmlid=${sala.id_sala}">
+                        <article class="caixa_sala vermelho">
+                            <p>${sala.nome_sala}</p>
+                        </article>
+                    </a>
                     `
                 });
             }
 
             listarSalas()
         </script>
-
-        <!-- <a href="grade.html">
-            <article class="caixa_sala vermelho">
-                <p>Sala 1</p>
-            </article>
-        </a>
-        <a href="grade.html">
-            <article class="caixa_sala vermelho">
-                <p>Sala 2</p>
-            </article>
-        </a>
-        <a href="grade.html">
-            <article class="caixa_sala vermelho">
-                <p>Sala 3</p>
-            </article>
-        </a>
-        <a href="grade.html">
-            <article class="caixa_sala vermelho">
-                <p>Sala 4</p>
-            </article>
-        </a> -->
     </section>
 </main>
 <footer>
